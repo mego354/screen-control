@@ -1,0 +1,18 @@
+{% extends "attend/layout.html" %}
+{% load custom_filters %}
+
+{% block title %}{{ object|classname }} Delete{% endblock %}
+{% block content %}
+  <div class="confirm-delete-container">
+    <h2 class="confirm-delete-title">Confirm Delete</h2>
+
+    <form method="post" class="confirm-delete-form">
+      {% csrf_token %}
+      <p>Are you sure you want to delete <strong>{{ object|classname }}</strong> "{{ object }}"?</p>
+      <div class="confirm-delete-actions">
+        <button type="submit" class="btn delete-btn">Confirm</button>
+        <a href="{{ object|get_url:'detail' }}" class="btn cancel-btn">Cancel</a>
+      </div>
+    </form>
+  </div>
+{% endblock %}

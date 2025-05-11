@@ -1,0 +1,113 @@
+{% load static %}
+{% load custom_filters %}
+<!doctype html>
+<html lang="en">
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <!-- Bootstrap CDN -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+        <!-- CSS File -->
+        <link href="{% static "style/styles.css" %}" rel="stylesheet">
+
+        <title>{% block title %}Attendance{% endblock %}</title>
+
+        <!-- CSS script block that will be filled by child templates -->
+        {% block style %}
+        {% endblock %}
+
+
+    </head>
+    <body>
+
+        {% if messages %}
+        <!-- Include messages -->
+        {% include 'attend/messages.html' %}
+        {% endif %}
+
+        <!-- Include the header -->
+        <header>
+            <nav class="navbar navbar-expand{% if user.is_authenticated %}-sm{% endif %}">
+                <div class="container-fluid">
+                    <a class="navbar-brand" href="{% url "attend:screen_update" %}">
+                        <img id="nav-logo" src="{% static "attend/logos/universty.png" %}" alt="Logo" width="60" height="60" class="d-inline-block align-text-top">
+                        <span class="color-Light-Teal">B</span>
+                        <span class="color-always-black">A</span>
+                        <span class="color-gold">T</span>
+                        <span class="color-Heavy-Teal">U</span>
+                        <span class="color-always-black">|</span>
+                        <span class="color-always-black">Attendance</span>
+                        
+                    </a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarNav">
+                        {% if user.is_authenticated %}
+                            <ul class="navbar-nav ms-auto me-4">
+                                <li class="nav-item d-flex align-items-start justify-content-center">
+                                    <button id="toggle-contrast" class="btn nav-link"><i id="dark_icon" class="fa-solid fa-sun fa-xl" style="color: #FFD43B;"></i></button>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="color-always-black nav-link" href="{% url "attend:screen_update" %}">Home</a>
+                                </li>
+                                <li class="nav-item dropdown user-settings">
+                                    <a class="color-always-black nav-link dropdown-toggle" href="{% url "attend:screen_update" %}" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="fa-regular fa-user fa-xl" style="color: #0091ff;"></i>
+                                    </a>
+                                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                                        <li><a class="dropdown-item" href="{% url "attend:password_change" %}">Change Password</a></li>
+                                        <li><a class="dropdown-item" href="{% url "attend:logout" %}">Logout</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        {% else %}
+                            <ul class="navbar-nav ms-auto me-4">
+                                <li class="nav-item d-flex align-items-start justify-content-center">
+                                    <button id="toggle-contrast" class="btn nav-link"><i id="dark_icon" class="fa-solid fa-sun fa-xl" style="color: #FFD43B;"></i></button>
+                                </li>
+        
+                                <li class="nav-item dropdown user-settings">
+                                    <a class="color-always-black nav-link dropdown-toggle" href="{% url "attend:screen_update" %}" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="fa-regular fa-user fa-xl" style="color: #0091ff;"></i>
+                                    </a>
+                                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+        
+                                        <li><a class="dropdown-item" href="{% url "attend:login" %}">Login</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                    
+                        {% endif %}
+                    </div>
+                </div>
+            </nav>
+            
+        </header>
+        
+        <!-- Main content block that will be filled by child templates -->
+        <main class="flex-grow-1">
+            {% block content %}
+            {% endblock %}
+        </main>
+
+        <!-- Include the footer -->
+        {% include 'attend/footer.html' %}
+
+
+        <!-- Bootstrap Bundle with Popper -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+        <!-- Font-awesome Kit -->
+        <script src="https://kit.fontawesome.com/80a9f53b2d.js" crossorigin="anonymous"></script>
+        <!-- Dark Mode -->
+        <script src="{% static 'js/scripts/dark_mode.js' %}"></script>
+
+        <!-- JS script block that will be filled by child templates -->
+        {% block script %}
+        {% endblock %}
+
+    </body>
+</html>

@@ -1,0 +1,232 @@
+{% extends "attend/layout.html" %}
+{% load static %}
+{% load custom_filters %}
+
+{% block title %}Control Table{% endblock %}
+{% block content %}
+
+  <div class="loading_container">
+    <div class="loading_content">
+        <div class="loading_circle"></div>
+        <div class="loading_circle"></div>
+        <div class="loading_circle"></div>
+        <div class="loading_circle"></div>
+    </div>
+  </div>
+
+
+  <div class="filters_container container mb-3 mx-0 px-4 mw-100 shadow">
+
+    <div class="row gap-2">
+      <!-- Academic years Filter -->
+      <select class="col" id="filter-year">
+        <option value="">Select year</option>
+        {% for year in years %}
+        <option value="{{ year }}">{{ year }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="row gap-2">
+      <!-- Academic College Filter -->
+      <select class="col" id="filter-college">
+        <option value="">Select College</option>
+        {% for college in colleges %}
+        <option value="{{ college.name }}" {% if college.name == selected_College %}selected{% endif %}>{{ college.name }}</option>
+        {% endfor %}
+      </select>
+      
+      <!-- Academic Department Filter -->
+      <select class="col" id="filter-department">
+        <option value="">Select Department</option>
+        {% for department in departments %}
+        <option value="{{ department.name }}" {% if department.name == selected_department %}selected{% endif %}>{{ department.name }}</option>
+        {% endfor %}
+      </select>
+      
+    </div>
+
+    <div class="row gap-2">
+      <!-- Group Filter -->
+      <select class="col" id="filter-group">
+        <option value="">Select Group</option>
+        {% for group in groups %}
+        <option value="{{ group.id }}">{{ group.number }}</option>
+        {% endfor %}
+      </select>
+      
+      <!-- Class Filter -->
+      <select class="col" id="filter-class">
+        <option value="">Select Class</option>
+        {% for class in classes %}
+        <option value="{{ class.id }}">{{ class.number }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="row gap-2">
+      <!-- Doctor Filter -->
+      <select class="col" id="filter-doctor">
+        <option value="">Select Doctor</option>
+        {% for doctor in doctors %}
+        <option value="{{ doctor.id }}">{{ doctor.name }}</option>
+        {% endfor %}
+      </select>
+
+      <!-- Course Filter -->
+      <select class="col" id="filter-course">
+        <option value="">Select Course</option>
+        {% for course in courses %}
+        <option value="{{ course.id }}">{{ course.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="row gap-2">
+      <!-- Day Filter -->
+      <select id="filter-day" class="col">
+        <option value="">All Days</option>
+        <option value="monday">Monday</option>
+        <option value="tuesday">Tuesday</option>
+        <option value="wednesday">Wednesday</option>
+        <option value="thursday">Thursday</option>
+        <option value="friday">Friday</option>
+        <option value="saturday">Saturday</option>
+        <option value="sunday">Sunday</option>
+      </select>
+      
+      <!-- Room Filter -->
+      <select class="col" id="filter-room">
+        <option value="">Select Room</option>
+        {% for room in rooms %}
+        <option value="{{ room.id }}">{{ room.name }}</option>
+        {% endfor %}
+      </select>  
+    </div>
+
+    <div class="row gap-3">
+      <!-- Event Type Filter -->
+      <div class="col d-flex flex-row justify-content-start gap-3 align-items-center p-0">
+        <p class="radio_btn_p">Type:</p>
+        <label class="radio_btn_container">All
+          <input type="radio" value="all" name="events_type" checked="checked" >
+          <span class="checkmark"></span>
+        </label>
+        <label class="radio_btn_container">Lectures
+          <input type="radio" value="lectures" name="events_type">
+          <span class="checkmark"></span>
+        </label>
+        <label class="radio_btn_container">Sections
+          <input type="radio" value="sections" name="events_type">
+          <span class="checkmark"></span>
+        </label>
+      </div>
+
+      <!-- Event Standard Filter -->
+      <div class="col d-flex flex-row justify-content-start gap-3 align-items-center p-0">
+        <p class="radio_btn_p">Standard:</p>
+        <label class="radio_btn_container">Both
+          <input type="radio" value="All" name="standard" checked="checked" >
+          <span class="checkmark"></span>
+        </label>
+        <label class="radio_btn_container">STD
+          <input type="radio" value="True" name="standard">
+          <span class="checkmark"></span>
+        </label>
+        <label class="radio_btn_container">Not
+          <input type="radio" value="False" name="standard">
+          <span class="checkmark"></span>
+        </label>
+      </div>
+    </div>
+
+    <div class="row gap-3">
+      <!-- Event Type Filter -->
+      <div class="col d-flex flex-row justify-content-start gap-3 align-items-center p-0">
+        <label class="filter_date_label" for="filter-start-date">Start Date:</label>
+        <input type="date" id="filter-start-date" name="start_date" min="{{start_date}}">
+      </div>
+
+      <!-- Event Standard Filter -->
+      <div class="col d-flex flex-row justify-content-start gap-3 align-items-center p-0">
+        <label class="filter_date_label" for="filter-end-date">End Date:</label>
+        <input type="date" id="filter-end-date" name="end_date" max="{{end_date}}">
+      </div>    
+    </div>
+
+  </div>
+
+  <div class="d-flex justify-content-end w-100 mb-2">
+    <button class="button btn-outline " id="reset-filters" type="button">Reset Filters</button>
+  </div>
+  
+  <h1>STD Table List View</h1>
+    <div class="d-flex justify-content-between w-100 mb-2">
+      <a type="button" class="button btn-outline " href="{% url 'attend:lecture_create' %}">New Lecture</a>
+      <a type="button" class="button btn-outline " href="{% url 'attend:section_create' %}">New Section</a>  
+    </div>
+
+    <!-- Responsive Table -->
+    <section class="responsive-table">
+      <div class="responsive-table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Event</th>
+              <th>Course</th>
+              <th>Audience</th>
+              <th>Date</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for event in events %}
+            <tr>
+              <td>{% if event|classname == 'Lecture' %} lecture {% else %} section {% endif %} ({{ event.room.name }})</td>
+              <td>{{ event.DepCourse.course.name }}</td>
+              <td>
+                {{ event.group.department }}-
+                Y{{ event|event_year }} 
+                G{{ event.group.number }}
+                {% if event|classname == 'Section' %} C{{ event.classs.number }} {% endif %}
+              </td>
+              <td>{{ event.date|date:"j M." }} {{ event.date|date:"g:i A" }} - {{ event.end_date|date:"g:i A" }}</td>
+              <td>
+                <a href="{{ event|get_url:'detail' }}" class="crud-btn read-btn"><i class="fa-regular fa-eye"></i></a>
+                <a href="{{ event|get_url:'update' }}" class="crud-btn update-btn"><i class="fa-regular fa-pen-to-square"></i></a>
+                <a href="{{ event|get_url:'delete' }}" class="crud-btn delete-btn"><i class="fa-solid fa-trash"></i></a>
+              </td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td class="text-center" colspan="5">No events to represent</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+
+    <!-- Pagination controls -->
+    <div class="pagination d-flex justify-content-between w-100 mb-2">
+      {% if page_obj.has_previous %}
+      <a class="button pagination_button" href="?{{ query_params }}&page={{ page_obj.previous_page_number }}"><i class="fa-solid fa-backward fa-lg" ></i> Previous</a>
+      {% else %}
+      <button class="color-always-grey button pagination_button" disabled><i class="fa-solid fa-backward fa-lg"></i> Previous</button>
+      {% endif %}
+
+      {% if page_obj.has_next %}
+        <a class="button pagination_button " href="?{{ query_params }}&page={{ page_obj.next_page_number }}">Next <i class="fa-solid fa-forward fa-lg" ></i></a>  
+      {% else %}
+        <button class="color-always-grey button pagination_button" disabled>Next <i class="fa-solid fa-forward fa-lg"></i></button>  
+      {% endif %}
+    </div>
+    
+{% endblock %}
+
+{% block script %}
+<script src="{% static 'js/scripts/sstd_table.js' %}"></script>
+<!-- Loading-Spinner -->
+<script src="{% static 'js/scripts/loading.js' %}"></script>
+{% endblock %}

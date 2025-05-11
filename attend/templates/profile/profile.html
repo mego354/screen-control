@@ -1,0 +1,142 @@
+{% extends "attend/layout.html" %}
+{% load tz %}
+{% load static %}
+{% load custom_filters %}
+
+{% block title %}Profile{% endblock %}
+{% block content %}
+  <div class="image_bg_container mt-3">
+    <h2 class="event-title">Personal Details</h2>
+      <div class="event-details">
+        <p><strong>Name:</strong> {{ student.user.first_name }} {{ student.user.last_name }}</p>
+        <p><strong>National ID:</strong> {{ student.user.national_id }}</p>
+        <p><strong>Type:</strong>
+            {% if student.user.sex == 'Male' %}
+                {{ student.user.sex }}
+            {% endif %}
+        </p>
+      </div>
+      
+      <h2 class="event-title">Student Details</h2>
+      <div class="event-details">
+        <p><strong>College:</strong> {{ student.college }}</p>
+        <p><strong>Academic Year:</strong> {{ student.dofaa.year|get_academic_year }} (P. {{ student.dofaa }})</p>
+        <p><strong>Academic ID:</strong> {{ student.user.id }}</p>
+        <p><strong>Department:</strong> {{ student.department.name }}</p>
+        <p><strong>Group:</strong> {{ student.group.number }} (Class {{ student.classs.number }})</p>
+        <p><strong>Last Update:</strong> {{ student.last_date|localtime|date:"l, j-n-Y g:i a"  }}</p>
+      </div>
+
+    <div class="mb-3 event-actions">
+        <form class="fotd" action={% url 'attend:update_finger_print' %} method="post">
+            {% csrf_token %}
+            <input class="DV" type="hidden" name="dvname" value=""> 
+            <button type="submit" class="btn golden-btn">Update Finger Print</button>
+        </form>
+        <a href={% url 'attend:password_change' %} class="btn golden-btn">Change Password</a>
+    </div>
+
+    {% if courses %}
+        <h2 class="event-title">Active Courses</h2>
+        <div class="responsive-list">
+            <ul class="attendee-list">
+                {% for course ,details in courses.items %}
+                    <li class="attend_record_li" data-divid="{{ course.course.name|sanitize_id }}">
+                        <p class="list-item">
+                            <span class="list-title">{{ course.course.name }}</span>
+                            <span id="{{ course.course.name|sanitize_id }}_span" class="hover_pointer list-detail">Review</span>
+                        </p>
+                    </li>
+
+                    <div class="attend_record hidden" id="{{ course.course.name|sanitize_id }}">
+                        {% comment %} Lectures {% endcomment %}
+                        <p class="list-title attend_record_title">Lectures</p>
+                        <li>
+                            <p class="item-details">
+                                <span class="mx-2">Attended: {{ details.attend_lectures }}</span>
+                                <span class="mx-2">Total: {{ details.total_lectures }}</span>
+                            </p>
+                        </li>
+                        <p class="list-title attend_record_title">Lectures details</p>
+                        {% for lecture in details.lectures  %}
+                        <li>
+                            <p class="item-details">
+                                {% if lecture.is_done or user in lecture.attendees.all%}
+                                    {% if user in lecture.attendees.all %}
+                                    <span class="mx-2"> Attended</span>
+                                    {% else %}
+                                    <span class="mx-2"> Absence </span>
+                                    {% endif %}
+                                {% else %}
+                                    <span class="mx-2"> Not yet </span>
+                                {% endif %}
+                                <span class="mx-2"> {{lecture.date|localtime|date:"j-n-Y"}} </span>
+                            </p>
+                        </li>
+                        {% empty %}
+                        <li>
+                            <p class="item-details">
+                                <span class="mx-2"> Empty </span>
+                                <span class="mx-2"> Empty </span>
+                                <span class="mx-2"> Empty </span>
+                            </p>
+                        </li>
+                        {% endfor %}
+                        {% comment %} Sections {% endcomment %}
+                        <p class="list-title attend_record_title">Sections</p>
+                        <li>
+                            <p class="item-details">
+                                <span class="mx-2">Total: {{ details.total_sections }}</span>
+                                <span class="mx-2">Attended: {{ details.attend_sections }}</span>
+                            </p>
+                        </li>
+                        <p class="list-title attend_record_title">sections details</p>
+                        {% for section in details.sections  %}
+                        <li>
+                            <p class="item-details">
+                                {% if section.is_done %}
+                                {% if user in section.attendees.all %}
+                                <span class="mx-2"> Attended</span>
+                                {% else %}
+                                <span class="mx-2"> Absence </span>
+                                {% endif %}
+                                {% else %}
+                                <span class="mx-2"> Not yet </span>
+                                {% endif %}
+                                <span class="mx-2"> {{section.date|localtime|date:"j-n-Y"}} </span>
+                            </p>
+                        </li>
+                        {% empty %}
+                        <li>
+                            <p class="item-details">
+                                <span class="mx-2"> Empty </span>
+                                <span class="mx-2"> Empty </span>
+                                <span class="mx-2"> Empty </span>
+                            </p>
+                        </li>
+                        {% endfor %}
+
+                    </div>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+
+  </div>
+{% endblock %}
+
+{% block style %}
+{% if student.user.sex != 'Male' %}
+<style>
+    .image_bg_container::before {
+        background-image: url('/static/images/study_girl.png');
+    }
+</style>
+{% endif %}
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'js/scripts/attend_record.js' %}"></script>
+    <script type="text/javascript" src="https://wurfl.io/wurfl.js"></script>
+    <script src="{% static 'js/forms/model_form.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,46 @@
+{% load static %}
+{% load custom_filters %}
+<header>
+    <nav class="navbar navbar-expand{% if user.is_authenticated %}-sm{% endif %}">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{% url "attend:TableListView" %}">
+                <img id="nav-logo" src="{% static "attend/logos/universty.png" %}" alt="Logo" width="60" height="60" class="d-inline-block align-text-top">
+                <span class="color-Light-Teal">B</span>
+                <span class="color-always-black">A</span>
+                <span class="color-gold">T</span>
+                <span class="color-Heavy-Teal">U</span>
+                <span class="color-always-black">|</span>
+                <span class="color-always-black">Attendance</span>
+                
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto me-4">
+                        <li class="nav-item d-flex align-items-start justify-content-center">
+                            <button id="toggle-contrast" class="btn nav-link"><i id="dark_icon" class="fa-solid fa-sun fa-xl" style="color: #FFD43B;"></i></button>
+                        </li>
+                        <li class="nav-item">
+                            <a class="color-always-black nav-link" href="{% url "attend:TableListView" %}">Home</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="color-always-black nav-link dropdown-toggle" href="{% url "attend:TableListView" %}" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Control
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <li><a class="dropdown-item" href="{% url "attend:TableListView" %}">Standard Table</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="{% url "attend:lecture_create" %}">Create Lecture</a></li>
+                                    <li><a class="dropdown-item" href="{% url "attend:section_create" %}">Create Section</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="{% url "attend:room_pictures" room_code='A101' %}">Room A101</a></li>
+                                    <li><a class="dropdown-item" href="{% url "attend:room_pictures" room_code='A118' %}">Room A118</a></li>
+                                </ul>
+                            </li>
+                    </ul>
+            </div>
+        </div>
+    </nav>
+    
+</header>

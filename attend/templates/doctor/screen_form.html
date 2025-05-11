@@ -1,0 +1,35 @@
+{% extends "doctor/layout.html" %}
+{% load static %}
+{% load custom_filters %}
+
+{% block title %}Screen Control{% endblock %}
+{% block content %}
+<div class="d-flex flex-column justify-content-center align-items-center mt-3">
+    <h1 class="attendance-form-title">Edit Screen Text</h1>
+
+    <form class="attendance-form" method="post">
+        {% csrf_token %}
+
+        <!-- Render text_1 -->
+        <label for="{{ form.text_1.id_for_label }}">{{ form.text_1.label }}</label>
+        {{ form.text_1 }}
+        <hr>
+
+        <!-- Render text_2 -->
+        <label for="{{ form.text_2.id_for_label }}">{{ form.text_2.label }}</label>
+        {{ form.text_2 }}
+        <hr>
+
+        <div class="d-grid">
+            <button type="submit" class="submit-btn mx-auto mb-3">Save</button>
+            {% if object %}<a href="{% url 'attend:screen_update'  %}">Cancel</a>{% endif %}
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block script %}
+<script src="{% static 'js/scripts/sstd_table.js' %}"></script>
+<!-- Loading-Spinner -->
+<script src="{% static 'js/scripts/loading.js' %}"></script>
+{% endblock %}

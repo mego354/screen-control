@@ -1,0 +1,44 @@
+{% extends "attend/layout.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}Login{% endblock %}
+{% block content %}
+<div class="d-flex flex-column justify-content-center align-items-center mt-3">
+    <h1 class="attendance-form-title">Login</h1>
+
+    <form class="attendance-form pb-3 min-w" method="post" id="loginForm">
+        {% csrf_token %}
+        <div class="form-group">
+            {{ form.username.label_tag }}
+            {{ form.username }}
+            {% if form.username.errors %}
+                <div class="text-danger">
+                    {{ form.username.errors }}
+                </div>
+            {% endif %}
+        </div>
+        <div class="form-group">
+            {{ form.password.label_tag }}
+            {{ form.password }}
+            {% if form.password.errors %}
+                <div class="text-danger">
+                    {{ form.password.errors }}
+                </div>
+            {% endif %}
+        </div>
+        
+
+        <div class="d-grid">
+            <button type="submit" class="submit-btn mx-auto mb-3">Login</button>
+            <a href="{% url 'attend:registeruser' %}">We Owe You a Hello? <span class="color-Light-Teal">Register Now !</span></a>
+            <a href="{% url 'attend:password_reset' %}">Forget Your Password? <span class="color-Light-Teal">Click Here</span></a>
+        </div>
+    </form>
+    
+</div>
+{% endblock %}
+
+{% block script %}
+<script src="{% static 'js/forms/login_form.js' %}"></script>
+{% endblock %}

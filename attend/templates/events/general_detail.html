@@ -1,0 +1,39 @@
+{% extends "attend/layout.html" %}
+{% load custom_filters %}
+{% load tz %}
+{% block title %}{{ object|classname }} Details{% endblock %}
+{% block content %}
+  <div class="image_bg_container">
+    <h2 class="event-title">{{ object|classname }} Details</h2>
+    
+      <div class="event-details">
+        <p><strong>Course:</strong> {{ object.DepCourse.course.name }}</p>
+        <p><strong>Doctor:</strong> {{ object.doctor }}</p>
+        <p>
+          <strong>Audiance:</strong>
+          {% if object|classname == 'Lecture'%}
+            {{ object.group }}
+           {% elif object|classname == 'Section'%}
+            {{ object.classs }}
+           {% endif %}
+        </p>
+        <p><strong>Starts:</strong> {{ object.date|localtime|date:"l, j-n-Y g:i a" }}</p>
+        <p><strong>Ends:</strong> {{ object.end_date|localtime|date:"l, j-n-Y g:i a" }}</p>
+        <p><strong>Room:</strong> {{ object.room }}</p>
+        <p><strong>Active:</strong> {{ object.is_active|yesno:"Yes,No" }}</p>
+        <p><strong>Done:</strong> {{ object.is_done|yesno:"Yes,No" }}</p>
+        <p><strong>Standard:</strong> {{ object.is_std|yesno:"Yes,No" }}</p>
+      </div>
+      
+    <div class="event-actions">
+      <a href="{{ object|get_url:'update' }}" class="btn edit-btn">Edit</a>
+      
+      {% if not object.is_active and not object.is_done %}
+        <a href="{{ object|get_url:'ativate' }}" class="btn view-attend-btn">Activate</a>
+      {% endif %}
+      <a href="{{ object|get_url:'view_attend' }}" class="btn view-attend-btn">Attendance</a>
+      
+      <a href="{{ object|get_url:'delete' }}" class="btn delete-btn">Delete</a>
+    </div>
+  </div>
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends "attend/layout.html" %}
+{% load static %}
+{% block title %}Error{% endblock %}
+{% block content %}
+        <div class="mt-5 image_bg_container black_bg" >
+            <h1 class="text-center" style="color: var(--bs-error);">Oops! Browser Error</h1>
+            <h3>You can't update your finger print from this browser!</h3>
+            <div class='text-start mt-3 mb-4'>
+                <p>for Huawie devices try <a class="gold_green_link" href="https://apkpure.com/p/com.UCMobile.intl" target="_blank">UC Browser </a> APK Pure</p>
+                <p>for Android devices try <a class="gold_green_link" href="https://play.google.com/store/apps/details?id=com.opera.browser" target="_blank">Opera Browser </a> or <a class="gold_green_link" href="https://play.google.com/store/apps/details?id=com.UCMobile.intl" target="_blank">UC Browser </a> Google Play</p>
+                <p>for Iphone devices try <a class="gold_green_link" href="https://apps.apple.com/us/app/safari/id1146562112" target="_blank">Safari </a> App Store</p>
+            </div>
+            <a href="{% url 'attend:student_profile' %}" class="p-0 btn teal_green_link">Go Back to Your Profile</a>
+        </div>
+{% endblock %}
+

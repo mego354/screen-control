@@ -1,0 +1,58 @@
+{% extends "attend/layout.html" %}
+{% load static %}
+{% block title %}Student Regteration{% endblock %}
+{% block content %}
+    <div id='form_div' class="d-flex flex-column justify-content-center align-items-center mt-3">
+        <h1 class="attendance-form-title">Student Data</h1>
+        <form class="attendance-form" method="post">
+            {% csrf_token %}
+            <input id="DV" type="hidden" name="dvname" value=""> 
+
+            <label>Device: </label> 
+            <input id="Brand" name="dvname" disabled value=""> 
+            {{form.as_p}}
+            <hr>
+            <div class="d-grid">
+                <button type="submit" class="submit-btn mx-auto ">Register as Student</button>
+            </div>
+        </form>
+    </div>
+        <div id='form_error' class="hidden mt-5 image_bg_container black_bg" >
+            <h1 class="text-center" style="color: var(--bs-error);">Oops! Browser Error</h1>
+            <h3>Try to refresh the page if still error then..</h3>
+            <h3>You can't regist an account from this browser!</h3>
+            <div class='text-start mt-3 mb-4'>
+                <p>for Huawie devices try <a class="gold_green_link" href="https://apkpure.com/p/com.UCMobile.intl" target="_blank">UC Browser </a> APK Pure</p>
+                <p>for Android devices try <a class="gold_green_link" href="https://play.google.com/store/apps/details?id=com.opera.browser" target="_blank">Opera Browser </a> or <a class="gold_green_link" href="https://play.google.com/store/apps/details?id=com.UCMobile.intl" target="_blank">UC Browser </a> Google Play</p>
+                <p>for Iphone devices try <a class="gold_green_link" href="https://apps.apple.com/us/app/safari/id1146562112" target="_blank">Safari </a> App Store</p>
+            </div>
+            <a href="{% url 'attend:login' %}" class="p-0 btn teal_green_link">Go Back to Home</a>
+        </div>
+{% endblock %}
+
+{% block script %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="{% static 'js/forms_api/dynamic_update.js' %}"></script>
+<script src="{% static 'js/forms_api/register_student.js' %}"></script>
+
+<script type="text/javascript" src="https://wurfl.io/wurfl.js"></script>
+<script>
+    const brand = WURFL.complete_device_name.trim().split(" ")[0];
+    const non_brands = ['Microsoft', 'Generic', 'Mozilla'];
+    if(!non_brands.includes(brand)){
+        document.getElementById('form_div').classList.add('hidden');
+        document.getElementById('form_error').classList.remove('hidden');
+    }
+    else {
+        // Get the current URL
+        let currentUrl = new URL(window.location.href);
+        // Set the 'device' parameter with the brand value
+        currentUrl.searchParams.set("device", brand);
+        // Update the URL without reloading the page
+        window.history.pushState({}, '', currentUrl);
+        
+        document.querySelector("#Brand").value = brand; 
+        document.querySelector("#DV").value = WURFL.complete_device_name; 
+    }
+</script>
+{% endblock %}

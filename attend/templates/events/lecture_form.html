@@ -1,0 +1,135 @@
+{% extends "attend/layout.html" %}
+{% load static %}
+{% load custom_filters %}
+
+{% block title %}{% if object %} Edit {{object}} {% else %} Create Lecture {% endif %}{% endblock %}
+{% block content %}
+<div class="d-flex flex-column justify-content-center align-items-center mt-3">
+    <h1 class="attendance-form-title">{% if object %} Edit {{object}} {% else %} Create Lecture {% endif %}</h1>
+    
+    <form class="attendance-form" method="post">
+      {% csrf_token %}
+      
+      <!-- Render the 'college' field -->
+      <label for="{{ form.college.id_for_label }}">{{ form.college.label }}</label>
+      <select name="{{ form.college.name }}" id="{{ form.college.id_for_label }}" onchange="loadDepartments('{% url 'attend:ajax_load_departments' %}')" required>
+    {% for value, label in form.college.field.choices %}
+      {% if not value %}
+      <option value value disabled selected>Select a college</option>
+      {% else %}
+      <option value="{{ value }}" {% if form.college.value == value %} selected {% endif %}>{{ label }}</option>
+      {% endif %}
+      {% endfor %}
+    </select>
+    <hr>
+    
+    <!-- Render the 'department' field -->
+    <label for="{{ form.department.id_for_label }}">{{ form.department.label }}</label>
+    <select name="{{ form.department.name }}" id="{{ form.department.id_for_label }}" onchange="loadCourses()" required>
+      {% for value, label in form.department.field.choices %}
+      {% if not value %}
+      <option value value disabled selected>Select a department</option>
+      {% else %}
+      <option value="{{ value }}" {% if form.department.value == value %} selected {% endif %}>{{ label }}</option>
+      {% endif %}
+      {% endfor %}
+    </select>
+    <hr>
+    
+    <!-- Render the 'year' field -->
+    <label for="{{ form.year.id_for_label }}">{{ form.year.label }}</label>
+    <input type="number" name="{{ form.year.name }}" id="{{ form.year.id_for_label }}" value={% if form.year.value %} {{ form.year.value }} {% else %} 1 {% endif %} min="1" max="4" onchange="loadCourses()" required>
+    <hr>
+    
+    <!-- Render the 'Course' field -->
+    <label for="{{ form.DepCourse.id_for_label }}">{{ form.DepCourse.label }}</label>
+    <select name="{{ form.DepCourse.name }}" id="{{ form.DepCourse.id_for_label }}" data-doctor="true" onchange="loadDoctors('{% url 'attend:ajax_load_doctors' %}')" required>
+      {% for value, label in form.DepCourse.field.choices %}
+      {% if not value %}
+      <option value value disabled selected>Select a Course</option>
+      {% else %}
+      <option value="{{ value }}" {% if form.DepCourse.value == value %} selected {% endif %}>{{ label }}</option>
+      {% endif %}
+      {% endfor %}
+    </select>
+    <hr>
+    
+    <!-- Render the 'doctor' field -->
+    <label for="{{ form.doctor.id_for_label }}">{{ form.doctor.label }}</label>
+    <select name="{{ form.doctor.name }}" id="{{ form.doctor.id_for_label }}" required>
+      {% for value, label in form.doctor.field.choices %}
+      {% if not value %}
+      <option value disabled selected>Select a Doctor</option>
+      {% else %}
+      <option value="{{ value }}" {% if form.doctor.value == value %} selected {% endif %}>{{ label }}</option>
+      {% endif %}
+      {% endfor %}
+    </select>
+    
+    <hr>
+    <!-- Render the 'group' field -->
+    <label for="{{ form.group.id_for_label }}">{{ form.group.label }}</label>
+    <select name="{{ form.group.name }}" id="{{ form.group.id_for_label }}" required>
+      {% for value, label in form.group.field.choices %}
+      {% if not value %}
+      <option value disabled selected>Select a Group</option>
+      {% else %}
+      <option value="{{ value }}" {% if form.group.value == value %} selected {% endif %}>{{ label }}</option>
+      {% endif %}
+      {% endfor %}
+    </select>
+    
+    <hr>
+    
+    <!-- Render the 'date' field -->
+    <label for="{{ form.date.id_for_label }}">{{ form.date.label }}</label>
+    {{form.date}}
+    <hr>
+    
+    <!-- Render the 'end date' field -->
+    <label for="{{ form.end_date.id_for_label }}">{{ form.end_date.label }}</label>
+    {{form.end_date}}
+    <hr>
+    
+    <!-- Render the 'room' field -->
+    <label for="{{ form.room.id_for_label }}">{{ form.room.label }}</label>
+    <select name="{{ form.room.name }}" id="{{ form.room.id_for_label }}" required>
+      {% for value, label in form.room.field.choices %}
+        {% if not value %}
+          <option value disabled selected>Select a Room</option>
+          {% else %}
+          <option value="{{ value }}" {% if form.room.value == value %} selected {% endif %}>{{ label }}</option>
+          {% endif %}
+          {% endfor %}
+        </select>
+        <hr>
+        
+        <!-- Render the 'is_std' field -->
+        {% if  user.role == 2 or user.role == 1%}
+    <div class="custom-checkbox">
+      <label for="{{ form.is_std.id_for_label }}">{{ form.is_std.label }}</label>
+      {{form.is_std}}
+    </div>
+    {% endif %}
+    <hr>
+    <div class="d-grid">
+      <button type="submit" class="submit-btn mx-auto mb-3">Save</button>
+      {% if object %} <a href="{{ object|get_url:'detail' }}">cancel</a> {% endif %}
+    </div>
+  </form>
+</div>
+  
+{% endblock %} 
+
+{% block script %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script type="text/javascript">
+  const load_doctors = "{% url 'attend:ajax_load_doctors' %}";
+  const load_courses = "{% url 'attend:ajax_load_courses' %}";
+  const load_groups = "{% url 'attend:ajax_load_groups' %}";
+  
+</script>
+<script src="{% static 'js/forms_api/dynamic_update.js' %}"></script>
+<script src="{% static 'js/forms_api/lecture_form.js' %}"></script>
+{% endblock %}
+  
