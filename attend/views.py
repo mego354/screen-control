@@ -320,3 +320,27 @@ class RoomPicturesListView(TemplateView):
             'end_date': event_end_date,
         }
 ####################################  END Room views  ##########################
+####################################  Office views  ##########################
+class OfficeScreenUpdateView(UpdateView):
+    model = OfficeScreen
+    form_class = OfficeScreenForm
+    template_name = 'doctor/screen_form.html'
+    success_url = reverse_lazy('attend:screen_update')  # Replace with your actual redirect URL name
+
+    def get_object(self, queryset=None):
+        doctor = get_object_or_404(Doctor, pk=20)
+        # doctor = get_object_or_404(Doctor, user=self.request.user)
+        return get_object_or_404(OfficeScreen, doctor=doctor)
+
+class OfficeDataView(View):
+    def get(self, request, doc_id):
+        doctor = get_object_or_404(Doctor, pk=doc_id)
+        screen = get_object_or_404(OfficeScreen, doctor=doctor)
+
+        data = {
+            "text_1": screen.text_1,
+            "text_2": screen.text_2,
+                }
+
+        return JsonResponse(data, safe=False)
+

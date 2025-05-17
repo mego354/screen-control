@@ -28,7 +28,7 @@ class User(AbstractUser):
 
     sex = models.CharField(max_length=6, choices=SEX_CHOICES, default='Male')
     role = models.PositiveSmallIntegerField(choices=ROLE_CHOICES, default=3)
-    national_id = models.PositiveIntegerField(unique=True)
+    national_id = models.PositiveIntegerField(unique=True, null=True, blank=True)
 
     def __str__(self):
         return f"#{self.id}"
@@ -279,3 +279,10 @@ class SpecialEvent(models.Model):
     def __str__(self):
         return f"#{self.id} {self.time}, duration: {self.duration}, room {self.room}"
 
+class OfficeScreen(models.Model):
+    doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE, related_name="screen")
+    text_1 = models.CharField(max_length=255, blank=True, null=True)
+    text_2 = models.CharField(max_length=255, blank=True, null=True)
+    
+    def __str__(self):
+        return str(self.doctor.name)

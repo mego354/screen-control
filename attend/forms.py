@@ -113,3 +113,12 @@ class LectureForm(forms.ModelForm):
             except (ValueError, TypeError):
                 pass  
 
+
+class OfficeScreenForm(forms.ModelForm):
+    class Meta:
+        model = OfficeScreen
+        fields = ['text_1', 'text_2']
+        widgets = {
+            'text_1': forms.TextInput(attrs={'class': 'form-control'}),
+            'text_2': forms.TextInput(attrs={'class': 'form-control'}),
+        }

@@ -74,3 +74,11 @@ admin.site.register(Section, AdminSection)
 
 
 
+@admin.register(OfficeScreen)
+class OfficeScreenAdmin(admin.ModelAdmin):
+    list_display = ('doctor_name', 'text_1', 'text_2')
+    search_fields = ('doctor__name', 'text_1', 'text_2')
+
+    def doctor_name(self, obj):
+        return obj.doctor.name
+    doctor_name.short_description = 'Doctor'

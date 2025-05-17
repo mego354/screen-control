@@ -24,8 +24,11 @@ urlpatterns = [
     path('standard-table/lecture/<slug:slug>/ativate/', views.AtivateEventRedirectView.as_view(model=Lecture, pattern_name='attend:lecture_detail'), name='lecture_ativate'),
     path('standard-table/section/<slug:slug>/ativate/', views.AtivateEventRedirectView.as_view(model=Section, pattern_name='attend:section_detail'), name='section_ativate'),
 
+    # Doctor Pages 
+    path('doctor/screen-update', views.OfficeScreenUpdateView.as_view(), name='screen_update'),
 
     # dwin APIs
+    path('office/<int:doc_id>/', views.OfficeDataView.as_view(), name='office'),
     path('room/<str:room_code>/', views.RoomDataView.as_view(), name='room'),
     path('room/<str:room_code>/list/', views.RoomPicturesListView.as_view(), name='room_pictures'),
     path('doc_img/<int:doc_id>/', api.doc_img, name='doc_img'),
